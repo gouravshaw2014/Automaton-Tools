@@ -62,11 +62,11 @@ T = {
 }
 
 q0 = 'q0'
-Fl = {'qa'}
+Fl = {'q0', 'qa', 'qb'}
 Fg = {'q0', 'qa', 'qb'}
 
 cma = CMA(Q, E, T, q0, Fl, Fg)
 
 # Example test case:
-input_seq = [('a', 1), ('a', 1), ('b', 2), ('a', 3)]
+input_seq = [('a', 1), ('b', 2), ('a', 2), ('b', 2)]
 print("Accepted" if cma.accepts(input_seq) else "Rejected")
