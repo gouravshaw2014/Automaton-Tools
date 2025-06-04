@@ -1,0 +1,26 @@
+# States
+Q = {'q0','q1','q2'}
+
+# Alphabet
+E = {'a','b'}
+
+# Transitions: (current_state, input_symbol) -> next_state
+T = {
+    ('q0','a'): {'q0','q1'},
+    ('q0','b'): {'q0'},
+    ('q1','a'): {'q2'},
+    ('q2','a'): {'q2'},
+    ('q2','b'): {'q2'}
+}
+
+# Initial state
+q0 = 'q0'
+
+# Accepting state(s)
+F = {'q2'}
+
+# Test cases as array of strings
+test_case = [
+    'abbabaabbabab',
+    'babbabaabbaba'
+]

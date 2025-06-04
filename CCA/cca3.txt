@@ -1,0 +1,30 @@
+# States
+Q = {'q0', 'q1'}
+
+# Alphabet
+E = {'a', 'b'}
+
+# Set of Initial States
+I = {'q0'}
+
+# Set of Final States
+F = {'q0'}
+
+# Transition format:(current_state, input_symbol, (condition_op, value), instruction{'*' : reset, '0' : no change , '+n' : add n}, next_state)
+# List
+T = [
+    ('q0', 'a', ('=', 0), '+1', {'q0'}),
+    ('q0', 'a', ('=', 1), '0', {'q1'}),
+    ('q0', 'b', ('>=', 0), '0', {'q0'}),
+    ('q1', 'a', ('>=', 0), '0', {'q1'}),
+    ('q1', 'b', ('>=', 0), '0', {'q1'})
+]
+
+# Test cases as sequence of (input_symbol, data_value)
+# Language accepts where sequence data values with 'a' are unique
+test_cases = [
+    [('a', '1'), ('a', '2'), ('a', '3')],   
+    [('a', '1'), ('a', '2'), ('a', '1')],   
+    [('b', '1'), ('a', '5'), ('b', '1')],   
+    [('a', '7'), ('b', '9'), ('a', '7')],   
+]

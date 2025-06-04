@@ -1,0 +1,43 @@
+# States
+Q = {'q0', 'q1', 'q2'}
+
+# Alphabet
+E = {'a', 'b'}
+
+# Number of registers
+k = 2
+
+# Initial register contents (uninitialized = None)
+R0 = {0: None, 1: None}
+
+# Transitions: (current_state, input_symbol, register_index) -> next_state
+T = {
+    ('q0', 'a', '0'): {'q1'},  
+    ('q0', 'b', '0'): {'q1'},       
+    ('q1', 'a', '1'): {'q2'},
+    ('q1', 'b', '1'): {'q2'},
+    ('q2', 'a', '0'): {'q1'}, 
+    ('q2', 'b', '0'): {'q1'},
+    ('q2', 'a', '1'): {'q2'},   
+    ('q2', 'b', '1'): {'q2'}  
+}
+
+# Update function: (state, input_symbol) -> register_index to update with fresh data
+U = {
+    ('q0', 'a'): 0,
+    ('q0','b'): 0,  
+    ('q1', 'a'): 1,
+    ('q1', 'b'): 1   
+}
+
+# Initial state
+q0 = 'q0'
+
+# Accepting state(s)
+F = {'q1'}
+
+# Test cases as sequence of (input_symbol, data_value)
+test_case=[
+    [('a', '0'), ('b', '1'), ('a', '0')],
+    [('a', '5'), ('b', '8'), ('a', '7')] 
+]

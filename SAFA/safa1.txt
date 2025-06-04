@@ -1,0 +1,28 @@
+# States
+Q = {'q0', 'q1'}
+
+# Alphabet
+E = {'a', 'b'}
+
+# Initial state
+q0 = 'q0'
+
+# Accepting state(s)
+F = {'q0'}
+
+# Set of sets
+H = {'h1': set()}
+
+# Transition function: (state, symbol, "0" for known / "1" for new, set_name) -> next_states (set of next_states)
+T = {
+    ('q0', 'a', '1', 'h1'): {'q0'},  
+    ('q0', 'a', '0', '-'): {'q1'},  
+    ('q1', 'b', '1', '-'): {'q0'},
+    ('q1', 'b', '0', '-'): {'q0'},
+}
+
+# Array of test case with sequence (symbol, data value)
+test_case=[
+    [('a', '1'), ('a', '2'), ('a', '1')],
+    [('a', '1'), ('a', '2'), ('a', '3')]
+]
