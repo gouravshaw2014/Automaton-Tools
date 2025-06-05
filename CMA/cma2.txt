@@ -1,0 +1,33 @@
+# For all date values for 'a' exactly twice
+# States
+Q = {'q0', 'q1', 'q2', 'q3'}
+
+# Alphabet
+E = {'a'}
+
+# Transition function : (state, symbol, last occurance state '-' for new) to set of next_states
+T = {
+    ('q0', 'a', '-'): {'q1'},
+    ('q1', 'a', '-'): {'q1'},
+    ('q2', 'a', '-'): {'q1'},
+    
+    ('q1', 'a', 'q1'): {'q2'},
+    ('q2', 'a', 'q1'): {'q2'},
+    
+    ('q2', 'a', 'q2'): {'q3'},
+}
+
+# Initial state
+q0 = 'q0'
+
+# Set of Local Final States
+Fl = {'q0', 'q1', 'q2'}
+
+# Set of Global Final States
+Fg = {'q2'}
+
+# Array of test case with sequence (symbol, data value)
+test_cases = [
+    [('a', 1), ('a', 2), ('a', 2), ('a', 1)],
+    [('a', 1), ('a', 2), ('a', 2), ('a', 2)]
+]

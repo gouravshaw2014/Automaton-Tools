@@ -36,37 +36,68 @@ class CMA:
 
         return False
 
+def test():
 # Example CMA for Lfd(a)
-Q = {'q0', 'qa', 'qb'}
-E = {'a', 'b'}
-T = {
-    ('q0', 'a', '-'): {'qa'},
-    ('qa', 'a', '-'): {'qa'},
-    ('qb', 'a', '-'): {'qa'},
+    Q = {'q0', 'qa', 'qb'}
+    E = {'a', 'b'}
+    T = {
+        ('q0', 'a', '-'): {'qa'},
+        ('qa', 'a', '-'): {'qa'},
+        ('qb', 'a', '-'): {'qa'},
 
-    ('q0', 'b', '-'): {'qb'},
-    ('qa', 'b', '-'): {'qb'},
-    ('qb', 'b', '-'): {'qb'},
+        ('q0', 'b', '-'): {'qb'},
+        ('qa', 'b', '-'): {'qb'},
+        ('qb', 'b', '-'): {'qb'},
 
-    ('q0', 'b', 'qa'): {'qa'},
-    ('qa', 'b', 'qa'): {'qa'},
-    ('qb', 'b', 'qa'): {'qa'},
+        ('q0', 'b', 'qa'): {'qa'},
+        ('qa', 'b', 'qa'): {'qa'},
+        ('qb', 'b', 'qa'): {'qa'},
 
-    ('q0', 'b', 'qb'): {'qb'},
-    ('qa', 'b', 'qb'): {'qb'},
-    ('qb', 'b', 'qb'): {'qb'},
+        ('q0', 'b', 'qb'): {'qb'},
+        ('qa', 'b', 'qb'): {'qb'},
+        ('qb', 'b', 'qb'): {'qb'},
 
-    ('q0', 'a', 'qb'): {'qa'},
-    ('qa', 'a', 'qb'): {'qa'},
-    ('qb', 'a', 'qb'): {'qa'},
-}
+        ('q0', 'a', 'qb'): {'qa'},
+        ('qa', 'a', 'qb'): {'qa'},
+        ('qb', 'a', 'qb'): {'qa'},
+    }
 
-q0 = 'q0'
-Fl = {'q0', 'qa', 'qb'}
-Fg = {'q0', 'qa', 'qb'}
+    q0 = 'q0'
+    Fl = {'q0', 'qa', 'qb'}
+    Fg = {'q0', 'qa', 'qb'}
 
-cma = CMA(Q, E, T, q0, Fl, Fg)
+    cma = CMA(Q, E, T, q0, Fl, Fg)
 
-# Example test case:
-input_seq = [('a', 1), ('b', 2), ('a', 2), ('b', 2)]
-print("Accepted" if cma.accepts(input_seq) else "Rejected")
+    # Example test case:
+    input_seq = [('a', 1), ('b', 2), ('a', 2), ('b', 2)]
+    print("Accepted" if cma.accepts(input_seq) else "Rejected")
+
+
+def load_cma_from_pyfile(filepath):
+    with open(file_path, 'r') as f:
+        content = f.read()
+
+    namespace = {}
+    exec(content, {}, namespace)
+
+    Q = set(namespace['Q'])
+    E = set(namespace['E'])
+    q0 = namespace['q0']
+    Fl = set(namespace['Fl'])
+    Fg = set(namespace['Fg'])
+    T = dict(namespace['T'])    
+    test_cases = list(namespace['test_cases'])
+
+    return Q, E, T, q0, Fl, Fg, test_cases
+
+
+file_path = r"C:\Users\hp\OneDrive\Desktop\Automata Tools\CMA\cma2.txt"
+Q, E, T, q0, Fl, Fg, test_case = load_cma_from_pyfile(file_path)
+
+M = CMA(Q, E, T, q0, Fl, Fg)
+for i, test in enumerate(test_case):
+    result = M.accepts(test)
+    print(f"Test case {i+1} accepted? {result}")
+
+
+# test()
