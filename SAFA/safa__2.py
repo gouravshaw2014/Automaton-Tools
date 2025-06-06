@@ -1,6 +1,5 @@
 from typing import List, Tuple, Dict, Set
-from collections import deque
-from collections import defaultdict
+from collections import deque, defaultdict
 from copy import deepcopy
 
 class SAFA:
@@ -10,7 +9,24 @@ class SAFA:
         self.q0 = q0
         self.F = F
         self.H = H
-        self.T = convert(T)  # { (state, symbol, condition) : set of "next_state,set_name" }
+        self.T = self.convert(T)  # { (state, symbol, condition) : set of "next_state,set_name" }
+
+    def convert(self,T):
+        grouped = defaultdict(set)
+
+        for state, symbol, condition, next_states in T:
+            key = (state, symbol, condition)
+            grouped[key].update(next_states)
+
+        St = defaultdict(list)
+        for (state, symbol, condition), targets in grouped.items():
+            St[(state, symbol)].append((condition, targets))
+
+        # Optional: convert lists to tuples for consistent format
+        for key in St:
+            St[key] = tuple(St[key])
+
+        return dict(St)
 
     def condition_check(self, cond: str, data: str, H_copy: Dict[str, Set[str]]) -> bool:
         if cond == '-' or cond == '':
@@ -68,22 +84,7 @@ class SAFA:
 
         return False
 
-def convert(T):
-    grouped = defaultdict(set)
 
-    for state, symbol, condition, next_states in T:
-        key = (state, symbol, condition)
-        grouped[key].update(next_states)
-
-    St = defaultdict(list)
-    for (state, symbol, condition), targets in grouped.items():
-        St[(state, symbol)].append((condition, targets))
-
-    # Optional: convert lists to tuples for consistent format
-    for key in St:
-        St[key] = tuple(St[key])
-
-    return dict(St)
 
 def a():
     Q = {'q0', 'q1','q2', 'q3'}
@@ -118,7 +119,7 @@ def a():
     w = [('a', '1'), ('a', '1'), ('a', '3'), ('a', '3'), ('a', '3')]
     print("Accepted?", M.accepts(w))  # Should process new/known with respect to h1
 
-def load_safa_from_pyfile(filepath):
+def parse_safa(filepath):
     with open(file_path, 'r') as f:
         content = f.read()
 
@@ -144,7 +145,7 @@ def load_safa_from_pyfile(filepath):
 
 # Usage
 file_path = r"C:\Users\hp\OneDrive\Desktop\Automata Tools\SAFA\safa3.txt"
-Q, E, q0, F, H, T, test_case = load_safa_from_pyfile(file_path)
+Q, E, q0, F, H, T, test_case = parse_safa(file_path)
 
 # Now you can use your SAFA class as before
 M = SAFA(Q, E, q0, F, H, T)

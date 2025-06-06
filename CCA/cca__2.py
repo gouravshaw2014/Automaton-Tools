@@ -1,8 +1,7 @@
 from typing import List, Tuple, Dict
-from collections import deque
+from collections import deque, defaultdict
+from collections import defaultdict
 from copy import deepcopy
-import copy
-import ast
 
 class CCA:
     def __init__(self, Q, E, I, F, T):
@@ -10,7 +9,45 @@ class CCA:
         self.E = E          # Alphabet
         self.I = I                  # Initial states
         self.F = F                  # Final states
-        self.T = T          # (q, a, cond, inst, q_next)
+        self.T = self.convert(T)          # (q, a, cond, inst, q_next)
+
+    def convert(self,T):
+        '''
+        Convert to CCA_T format for optimaized selction of next states
+            {('q0', 'a'): ((('=', 0), '+1', {'q1', 'q0'}), (('=', 1), '0', {'q1'})),
+            ('q0', 'b'): ((('>=', 0), '0', {'q0'}), (('>=', 0), '0', {'q1'})),
+            ('q1', 'a'): ((('>=', 0), '0', {'q1'}),),
+            ('q1', 'b'): ((('>=', 0), '0', {'q1'}),)}
+
+        '''
+        # CCA_T = {}
+        # for q, a, cond, inst, next_states in T:
+        #     key = (q, a)
+        #     val = (cond, inst, tuple(sorted(next_states)))  # convert set to sorted tuple
+        #     if key not in CCA_T:
+        #         CCA_T[key] = set()
+        #     CCA_T[key].add(val)
+        # return CCA_T
+        temp = defaultdict(set)
+
+        # Merge transitions with same (state, symbol, condition, instruction)
+        for state, symbol, condition, instruction, next_states in T:
+            key = (state, symbol, condition, instruction)
+            if key in temp:
+                temp[key] |= next_states  # Union the sets
+            else:
+                temp[key] = set(next_states)
+
+        # Convert to final CCA_T format
+        grouped = defaultdict(list)
+        for (state, symbol, condition, instruction), next_states in temp.items():
+            grouped[(state, symbol)].append((condition, instruction, next_states))
+
+        # Convert lists to tuples for consistency
+        for key in grouped:
+            grouped[key] = tuple(grouped[key])
+
+        return dict(grouped)
 
     def evaluate_condition(self, count: int, cond: Tuple[str, int]) -> bool:
         op, val = cond
@@ -69,7 +106,6 @@ class CCA:
     #                     queue.append((q_next, pos + 1, new_counter))
 
     #     return False
-
     def accepts(self, input_seq):
         queue = deque()
 
@@ -77,29 +113,68 @@ class CCA:
         for state in self.I:
             queue.append((state, 0, {}))  # (current_state, input_index, counter_dict)
 
-            while queue:
-                q, i, h = queue.popleft()
+        while queue:
+            q, i, h = queue.popleft()
 
-                if i == len(input_seq):
-                    if q in self.F:
-                        return True
-                    continue
+            if i == len(input_seq):
+                if q in self.F:
+                    return True
+                continue
 
-                sym, data = input_seq[i]
-                count = h.get(data, 0)
+            sym, data = input_seq[i]
+            count = h.get(data, 0)
 
-                for (q_curr, sym_t, cond, inst), q_next_set in self.T.items():
-                    if q != q_curr or sym != sym_t:
-                        continue
-
+            key = (q, sym)
+            if key in self.T:
+                for cond, inst, q_next_set in self.T[key]:
                     if self.evaluate_condition(count, cond):
                         new_h = deepcopy(h)
                         self.apply_instruction(count, inst, data, new_h)
-
                         for q_next in q_next_set:
                             queue.append((q_next, i + 1, new_h))
 
         return False
+    # def accepts(self, input_seq):
+    #     queue = deque()
+
+    #     # Initialize the queue with all initial states and an empty counter dictionary
+    #     for state in self.I:
+    #         queue.append((state, 0, {}))  # (current_state, input_index, counter_dict)
+
+    #         while queue:
+    #             q, i, h = queue.popleft()
+
+    #             if i == len(input_seq):
+    #                 if q in self.F:
+    #                     return True
+    #                 continue
+
+    #             sym, data = input_seq[i]
+    #             count = h.get(data, 0)
+
+    #             for tup in self.T[(q, sym)]:
+    #                 if self.evaluate_condition(count, tup[0]):
+    #                     new_h = deepcopy(h)
+    #                     self.apply_instruction(count, tup[1], data, new_h)
+    #                     for q_next in tup[2]:
+    #                         queue.append(q_next, i + 1, new_h)
+                    
+
+    #             # for (q_curr, sym_t, cond, inst), q_next_set in self.T.items():
+    #             #     if q != q_curr or sym != sym_t:
+    #             #         continue
+
+    #             #     if self.evaluate_condition(count, cond):
+    #             #         new_h = deepcopy(h)
+    #             #         self.apply_instruction(count, inst, data, new_h)
+
+    #             #         for q_next in q_next_set:
+    #             #             queue.append((q_next, i + 1, new_h))
+
+    #     return False
+
+
+
 
 
 def test():
@@ -109,13 +184,13 @@ def test():
     F = {'q0'}
 
     # Transition format: (current_state, input_symbol, (condition_op, value), instruction, next_state)
-    T = {
-        ('q0', 'a', ('=', 0), '+1'): {'q0'},
-        ('q0', 'a', ('=', 1), '0'): {'q1'},
-        ('q0', 'b', ('>=', 0), '0'): {'q0'},
-        ('q1', 'a', ('>=', 0), '0'): {'q1'},
-        ('q1', 'b', ('>=', 0), '0'): {'q1'}
-    }
+    T = [
+        ('q0', 'a', ('=', 0), '+1', {'q0'}),
+        ('q0', 'a', ('=', 1), '0', {'q1'}),
+        ('q0', 'b', ('>=', 0), '0', {'q0'}),
+        ('q1', 'a', ('>=', 0), '0', {'q1'}),
+        ('q1', 'b', ('>=', 0), '0', {'q1'})
+    ]
 
     cca = CCA(Q, E, I, F, T)
 
@@ -131,11 +206,10 @@ def test():
         print(f"Test case {i+1}: {result}")
 
 
-def parse_cca_file(file_path):
+def parse_cca(file_path):
     with open(file_path, 'r') as f:
         content = f.read()
 
-    # Define a safe namespace for exec
     namespace = {}
     exec(content, {}, namespace)
 
@@ -143,17 +217,20 @@ def parse_cca_file(file_path):
     E = set(namespace['E'])
     I = set(namespace['I'])
     F = set(namespace['F'])
-    T = dict(namespace['T'])
+    T = list(namespace['T'])    
     test_cases = list(namespace['test_cases'])
 
     return Q, E, I, F, T, test_cases
 
 
-file_path = r"C:\Users\hp\OneDrive\Desktop\Automata Tools\CCA\cca2.txt"
-Q, E, I, F, T, test_cases = parse_cca_file(file_path)
+
+file_path = r"C:\Users\hp\OneDrive\Desktop\Automata Tools\CCA\cca4.txt"
+Q, E, I, F, T, test_cases = parse_cca(file_path)
+# print(T)
 cca = CCA(Q, E, I, F, T)
 for i, (input_seq) in enumerate(test_cases):
     result = cca.accepts(input_seq)
     print(f"Test case {i+1}: {result}")
+    
 
 # test()

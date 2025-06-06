@@ -1,0 +1,44 @@
+# For unique date values for 'a'
+# States
+Q = {'q0', 'qa', 'qb'}
+
+# Alphabet
+E = {'a', 'b'}
+
+# Transition function : (state, symbol, last occurance state '-' for new) to set of next_states
+T = [
+    ('q0', 'a', '-', {'qa'}),
+    ('qa', 'a', '-', {'qa'}),
+    ('qb', 'a', '-', {'qa'}),
+
+    ('q0', 'b', '-', {'qb'}),
+    ('qa', 'b', '-', {'qb'}),
+    ('qb', 'b', '-', {'qb'}),
+
+    ('q0', 'b', 'qa', {'qa'}),
+    ('qa', 'b', 'qa', {'qa'}),
+    ('qb', 'b', 'qa', {'qa'}),
+
+    ('q0', 'b', 'qb', {'qb'}),
+    ('qa', 'b', 'qb', {'qb'}),
+    ('qb', 'b', 'qb', {'qb'}),
+
+    ('q0', 'a', 'qb', {'qa'}),
+    ('qa', 'a', 'qb', {'qa'}),
+    ('qb', 'a', 'qb', {'qa'}),
+]
+
+# Initial state
+q0 = 'q0'
+
+# Set of Local Final States
+Fl = {'q0', 'qa', 'qb'}
+
+# Set of Global Final States
+Fg = {'q0', 'qa', 'qb'}
+
+# Array of test case with sequence (symbol, data value)
+test_cases = [
+    [('a', 1), ('b', 2), ('a', 2), ('b', 2)],
+    [('a', 1), ('b', 2), ('a', 2), ('a', 2)]
+]

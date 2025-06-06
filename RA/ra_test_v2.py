@@ -2,21 +2,28 @@ from typing import List, Tuple, Dict
 from collections import deque
 import tracemalloc
 import random
-import ast
-import re
 
-class RegisterAutomaton:
+class RA:
     def __init__(self, Q, E, T, R0, U, q0, F, k):
 
         self.Q = Q
         self.E = E
-        self.T = convert(T)  # Transitions: (q, a, i) → q'
+        self.T = self.convert(T)  # Transitions: (q, a, i) → q'
         self.R = R0  # Current register config: [k] → D⊥
         self.U = U  # Update function: (q, a) → j
         self.q0 = q0
         self.F = F
         self.k = k
 
+    def convert(self,T):
+        CT = {}
+        for state, symbol, condition, next_states in T:
+            key = (state, symbol, condition)
+            if key in CT:
+                CT[key] |= next_states  # Union the sets
+            else:
+                CT[key] = set(next_states)
+        return CT
 
     def accepts(self, string: List[Tuple[str, str]]) -> bool:
         current_states = {(self.q0, 0, frozenset((h, str(v)) for h, v in self.R.items()))}
@@ -108,27 +115,18 @@ def a():
     # Accepting state(s)
     F = {'q2'}
 
-    RA = RegisterAutomaton(Q, E, T, R0, U, q0, F, k)
+    ra = RA(Q, E, T, R0, U, q0, F, k)
 
     # Test inputs
     input_sequence = [('a', '0'),('b', '1'), ('a', '0'), ('b', '1'), ('a', '0')]  # Should accept
     # input_sequence = generate_input_sequence(E, 100)
     tracemalloc.start()
-    print(RA.accepts(input_sequence))  # True
+    print(ra.accepts(input_sequence))  # True
     current, peak = tracemalloc.get_traced_memory()
     tracemalloc.stop()
     print(f"Memory Used: {current / 1024:.2f} KB (Peak: {peak / 1024:.2f} KB)")
 
 
-def convert(T):
-    CT = {}
-    for state, symbol, condition, next_states in T:
-        key = (state, symbol, condition)
-        if key in CT:
-            CT[key] |= next_states  # Union the sets
-        else:
-            CT[key] = set(next_states)
-    return CT
 def parse_register_automaton(file_path):
     with open(file_path, 'r') as f:
         content = f.read()
@@ -153,9 +151,9 @@ def parse_register_automaton(file_path):
 file_path = r"C:\Users\hp\OneDrive\Desktop\Automata Tools\RA\ra4.txt"
 Q, E, k, R0, T, U, q0, F, test_case = parse_register_automaton(file_path)
 R_initial = dict(R0)
-RA = RegisterAutomaton(Q, E, T, R0, U, q0, F, k)
+ra = RA(Q, E, T, R0, U, q0, F, k)
 for i in test_case:
-    print(RA.accepts(i))
+    print(ra.accepts(i))
     
 # a()
 # print(RA)

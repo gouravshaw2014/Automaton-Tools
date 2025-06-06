@@ -1,91 +1,85 @@
 from typing import List, Tuple, Dict, Set
-from collections import deque
+from collections import deque, defaultdict
+from copy import deepcopy
 
 class SAFA:
-    def __init__(self, Q: Set[str], E: Set[str], q0: str, F: Set[str],
-                 H: Dict[str, Set[str]],
-                 T: Dict[Tuple[str, str, str, str], Set[str]]):  # (state, symbol, condition, set_name) -> next_states
+    def __init__(self, Q, E, q0, F, H, T):
         self.Q = Q
         self.E = E
         self.q0 = q0
         self.F = F
         self.H = H
-        self.T = T
+        self.T = self.convert(T)  # { (state, symbol, condition) : set of "next_state,set_name" }
 
-    def accepts(self, w: List[Tuple[str, str]]) -> bool:
-        initial_config = (self.q0, {h: set(v) for h, v in self.H.items()})
+    def convert(self,T):
+        grouped = defaultdict(set)
+
+        for state, symbol, condition, next_states in T:
+            key = (state, symbol, condition)
+            grouped[key].update(next_states)
+
+        St = defaultdict(list)
+        for (state, symbol, condition), targets in grouped.items():
+            St[(state, symbol)].append((condition, targets))
+
+        # Optional: convert lists to tuples for consistent format
+        for key in St:
+            St[key] = tuple(St[key])
+
+        return dict(St)
+
+    def condition_check(self, cond: str, data: str, H_copy: Dict[str, Set[str]]) -> bool:
+        if cond == '-' or cond == '':
+            return True
+
+        parts = cond.split(',')
+        if len(parts) != 2:
+            raise ValueError(f"Invalid condition format: {cond}")
+
+        set_name, flag = parts
+        if set_name == '-':
+            return True
+
+        known = data in H_copy.get(set_name, set())
+
+        if flag == '0' and known:
+            return True
+        if flag == '1' and not known:
+            return True
+
+        return False
+
+    def accepts(self, w):
+        H_cur = deepcopy(self.H)
+        initial_config = (self.q0, H_cur)
         queue = deque()
-        queue.append((0, initial_config))  # (position, (state, H))
-
+        queue.append((0, initial_config))
+        
         while queue:
-            pos, (state, H_copy) = queue.popleft()
-
+            pos, (q, H_copy) = queue.popleft()
             if pos == len(w):
-                if state in self.F:
+                if q in self.F:
                     return True
                 continue
 
             symbol, data = w[pos]
+            key = (q, symbol)
 
-            for (q, a, cond, set_name), next_states in self.T.items():
-                if q != state or a != symbol:
-                    continue
-
-                # If no set is used (e.g., set_name == '-'), we skip checking known/new
-                if set_name != '-':
-                    known = data in H_copy[set_name]
-
-                    if cond == "0" and not known:
+            if key in self.T:
+                for cond, ns_action_set in self.T[key]:
+                    if not self.condition_check(cond, data, H_copy):
                         continue
-                    if cond == "1" and known:
-                        continue
+                    for ns_action in ns_action_set:
+                        if ',' in ns_action:
+                            q_next, set_name = ns_action.split(',')
+                            
+                        else:
+                            q_next, set_name = ns_action, '-'  # default to no set
 
-                for q_next in next_states:
-                    H_next = {h: set(s) for h, s in H_copy.items()}
-                    if cond == "1" and set_name != '-':
-                        H_next[set_name].add(data)
+                        H_next = deepcopy(H_copy)
+                        if set_name != '-':
+                            H_next[set_name].add(data)
 
-                    queue.append((pos + 1, (q_next, H_next)))
+                        queue.append((pos + 1, (q_next, H_next)))
 
         return False
-
-def a():
-    Q = {'q0', 'q1'}
-    E = {'a', 'b'}
-    q0 = 'q0'
-    F = {'q0'}
-    H = {'h1': set()}
-
-    # Transition function: (state, symbol, "0" for known / "1" for new, set_name) -> next_states
-    T = {
-        ('q0', 'a', '1', 'h1'): {'q0'},  # new value, insert into h1
-        ('q0', 'a', '0', '-'): {'q1'},  # known value
-        ('q1', 'b', '1', '-'): {'q0'},
-        ('q1', 'b', '0', '-'): {'q0'},
-    }
-
-    M = SAFA(Q, E, q0, F, H, T)
-
-    # Input: [('a', '1'), ('a', '2'), ('a', '3')]
-    w = [('a', '1'), ('a', '2'), ('a', '1')]
-    print("Accepted?", M.accepts(w))  # Should return True
-
-def load_safa_from_pyfile(filepath):
-    context = {}
-    with open(filepath, 'r') as f:
-        code = f.read()
-    exec(code, {}, context)
-    # Now context dict has Q, E, q0, F, H, T, test_case defined
-    return (context['Q'], context['E'], context['q0'], context['F'],
-            context['H'], context['T'], context['test_case'])
-
-# Usage
-file_path = r"C:\Users\hp\OneDrive\Desktop\SAFA\safa1.txt"
-Q, E, q0, F, H, T, test_case = load_safa_from_pyfile(file_path)
-
-# Now you can use your SAFA class as before
-M = SAFA(Q, E, q0, F, H, T)
-
-for i, test in enumerate(test_case):
-    result = M.accepts(test)
-    print(f"Test case {i+1} accepted? {result}")
