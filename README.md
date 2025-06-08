@@ -1,21 +1,22 @@
 # Automaton Tools
 ### I want to create Toolbox of automata mainly NFA(Non-Deterministic Finite Automata), RA(Register Automata), SAFA(Set Augmented Finite Automata), CCA(Class Count Automata) and CMA(Class Memory Automata).
+
 -------------------------------------------------
 
 ## About
-For the time being, I have created class structure of individual types of automatas. Each class has its constructors to initialize there corresponding machines tuples. 
+For the time being, I have created class structure of individual types of automatas. Each class has its constructors to initialize there corresponding machines tuples. The class has "accepts" method which takes string / sequence of (symbol,data value) as argument and return boolean value to indicate whether the input is accepted or rejected.
 
-The class has "accepts" method which takes string / sequence of (symbol,data value) as argument and return boolean value to indicate whether the input is accepted or rejected.
 -------------------------------------------------
 
 ## NFA(Non-Deterministic Finite Automata)
+
 An NFA, or Non-Deterministic Finite Automaton, is represented by a 5-tuple, which includes the following components:
 
 Q: A finite set of states.
 
 Σ/E: A finite set of input symbols.
 
-δ/T: The transition function, which maps a state and an input symbol to a subset of states. For an NFA, this is typically expressed as δ:Q×(Σ∪{ϵ})→P(Q), where P(Q) denotes the power set of Q.
+δ/T: The transition function, which maps a state and an input symbol to a subset of states. For an NFA, this is typically expressed as δ:Q×Σ→P(Q), where P(Q) denotes the power set of Q.
 
 q₀: The initial state, which is an element of Q.
 
@@ -23,43 +24,55 @@ F: A set of final or accepting states, which is a subset of Q.
 
 To create an NFA object initialize in the order NFA(Q, E, T, q0, F) or can give the text file path to parse and test it with the test cases.
 
+-------------------------------------------------
+
 ### Representation of (Q, E, T, q0, F, test_case) in text file
 #### Note :
 Q, E, T, q0, F and test_case should be mentioned once in the text file and the elements must be in single quotes and maintain the Brackets associates with it.
 
 ### Example 
-States 
+--States 
 
 Q = {'q0','q1','q2'}
 
-Alphabet
+--Alphabet
 
 E = {'a','b'}
 
-Transitions: ('current_state', 'input_symbol' , {'next_state'})
+--Transitions: ('current_state', 'input_symbol' , {'next_state'})
 
 T = [
+
     ('q0','a', {'q0','q1'}),
+
     ('q0','b', {'q0'}),
+
     ('q1','a', {'q2'}),
+
     ('q2','a', {'q2'}),
+
     ('q2','b', {'q2'})
+
 ]
 
-Initial state
+--Initial state
 
 q0 = 'q0'
 
-Accepting state
+--Accepting state
 
 F = {'q2'}
 
-Test cases as array of strings
+--Test cases as array of strings
 
 test_case = [
+
     'abbabaabbabab',
+
     'babbabaabbaba',
+
     'abababaaabbbabab'
+
 ]
 
 -------------------------------------------------
@@ -89,52 +102,65 @@ F: A set of final or accepting states, which is a subset of Q.
 
 To create an RA object initialize in the order RA(Q, E, T, R0, U, q0, F) or can give the text file path to parse and test it with the test cases.
 
+-------------------------------------------------
+
 ### Representation of (Q, E, T, R0, U, q0, F, test_case) in text file
 #### Note :
 Q, E, T, R0, U, q0, F and test_case should be mentioned once in the text file and the elements must be in single quotes and maintain the Brackets associates with it.
 
 ### Example 
-States
+--States
 
 Q = {'q0', 'q1', 'q2'}
 
-Alphabet
+--Alphabet
 
 E = {'a'}
 
-Initial register contents: {'register index' : 'data value'} for uninitialized (⊥) = None(without quotes)
+--Initial register contents: {'register index' : 'data value'} for uninitialized (⊥) = None(without quotes)
 
 R0 = {'1': None, '2': None}
 
-Transitions: ('current_state' , 'input_symbol' , 'register_index' , {'next_state'})
+--Transitions: ('current_state' , 'input_symbol' , 'register_index' , {'next_state'})
 
 T = [
+
     ('q0', 'a', '1', {'q1'}),
+
     ('q1', 'a', '1', {'q0'}),
+
     ('q1', 'a', '2', {'q2'})
+
 ]
 
-Update function: ('state', 'input_symbol') : 'register_index' to update with fresh data
+--Update function: ('state', 'input_symbol') : 'register_index' to update with fresh data
 
 U = {
+
     ('q0', 'a'): '1',
+
     ('q1', 'a'): '2'
+
 }
 
-Initial state
+--Initial state
 
 q0 = 'q0'
 
-Accepting state
+--Accepting state
 
 F = {'q0'}
 
-Test cases as sequence of (input_symbol, data_value)
+--Test cases as sequence of (input_symbol, data_value)
 
 test_case = [
+
     [('a', '0'),('a', '0'),('a', '1'),('a', '1')],
+
     [('a', '0'), ('a', '0'), ('a', '0'),('a','0')],
+
     [('a', '5'), ('a', '8'), ('a', '7')]
+
 ]
 
 -------------------------------------------------
@@ -156,50 +182,67 @@ H: The finite set of finite sets of data values.
 
 To create an RA object initialize in the order SAFA(Q, E, q0, F, H, T) or can give the text file path to parse and test it with the test cases.
 
+-------------------------------------------------
+
 ### Representation of (Q, E, q0, F, H, T, test_cases) in text file
 #### Note :
 Q, E, q0, F, H, T and test_cases should be mentioned once in the text file and the elements must be in single quotes and maintain the Brackets associates with it.
 
 ### Example 
-States
+--States
 
 Q = {'q0', 'q1','q2', 'q3'}
 
-Alphabet
+--Alphabet
 
 E = {'a'}
 
-Initial state
+--Initial state
 
 q0 = 'q0'
 
-Accepting state(s)
+--Accepting state(s)
 
 F = {'q1', 'q3'}
 
-Set of sets: {'set number' :set()}to create sets
+--Set of sets: {'set number' :set()}to create sets
 
 H = {'h1': set(), 'h2': set()}
 
-Transition function: ('state', 'symbol', 'set_number_to_check_its_presence,0/1', {'next_states,set_number_for_insertion'})
+--Transition function: ('state', 'symbol', 'set_number_to_check_its_presence,0/1', {'next_states,set_number_for_insertion'})
+
 "0" for known / "1" for new and '-' for no insertion
+
 T = [
+
     ('q0', 'a', 'h1,1', {'q0,h1','q1,h2'}),
+
     ('q0', 'a', 'h2,1', {'q3,h1','q1,h2'}),
+
     ('q0', 'a', 'h1,0', {'q0,h1'}), 
+
     ('q1', 'a', 'h2,1', {'q0,-'}),
+
     ('q1', 'a', 'h2,0', {'q2,-'}),
+
     ('q2', 'a', 'h2,1', {'q2,-'}),
+
     ('q2', 'a', 'h2,0', {'q3,-'}),
+
     ('q3', 'a', 'h1,0', {'q3,-'}),
+
     ('q3', 'a', 'h1,1', {'q3,-'}),
+
 ]
 
-Array of test case with sequence (symbol, data value)
+--Array of test case with sequence (symbol, data value)
 
 test_cases=[
+
     [('a', '1'), ('a', '2'), ('a', '4'), ('a', '3'), ('a', '3'),('a','4')],
+
     [('a', '1'), ('a', '2'), ('a', '3'), ('a', '3'), ('a', '1'),('a', '2'), ('a', '2')]
+    
 ]
 
 -------------------------------------------------
