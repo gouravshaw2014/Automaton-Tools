@@ -142,17 +142,17 @@ def parse_register_automaton(file_path):
     U = dict(namespace['U'])
     q0 = namespace['q0']
     F = set(namespace['F'])
-    test_case = namespace['test_case']
+    test_cases = namespace['test_cases']
 
-    return Q, E, k, R0, T, U, q0, F, test_case
+    return Q, E, k, R0, T, U, q0, F, test_cases
 
 
 
 file_path = r"C:\Users\hp\OneDrive\Desktop\Automata Tools\RA\ra4.txt"
-Q, E, k, R0, T, U, q0, F, test_case = parse_register_automaton(file_path)
+Q, E, k, R0, T, U, q0, F, test_cases = parse_register_automaton(file_path)
 R_initial = dict(R0)
 ra = RA(Q, E, T, R0, U, q0, F, k)
-for i in test_case:
+for i in test_cases:
     print(ra.accepts(i))
     
 # a()

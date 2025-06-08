@@ -13,7 +13,8 @@ F = {'q1', 'q3'}
 # Set of sets
 H = {'h1': set(), 'h2': set()}
 
-# Transition function: (state, symbol, "0" for known / "1" for new, set_name) -> next_states (set of next_states)
+# Transition function: ('state', 'symbol', 'set_number_to_check_its_presence,0/1', {'next_states,set_number_for_insertion'})
+# "0" for known / "1" for new and '-' for no insertion
 T = [
     ('q0', 'a', 'h1,1', {'q0,h1','q1,h2'}),
     ('q0', 'a', 'h2,1', {'q3,h1','q1,h2'}),

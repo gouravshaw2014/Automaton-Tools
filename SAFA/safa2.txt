@@ -26,7 +26,7 @@ T = {
 }
 
 # Array of test case with sequence (symbol, data value)
-test_case=[
+test_cases=[
     [('a', '1'), ('a', '2'), ('a', '4'), ('a', '3'), ('a', '3'),('a','4')],
     [('a', '1'), ('a', '2'), ('a', '3'), ('a', '3'), ('a', '1'),('a', '2'), ('a', '2')]
 ]

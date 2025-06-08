@@ -10,7 +10,7 @@ k = 2
 # Initial register contents (uninitialized = None)
 R0 = {'1': None, '2': None}
 
-# Transitions: (current_state, input_symbol, register_index) -> next_state
+# Transitions: (current_state, input_symbol, register_index, next_state)
 T = [
     ('q0', 'a', '1', {'q1'}),
     ('q1', 'a', '1', {'q0'}),
@@ -30,7 +30,7 @@ q0 = 'q0'
 F = {'q0'}
 
 # Test cases as sequence of (input_symbol, data_value)
-test_case = [
+test_cases = [
     [('a', '0'),('a', '0'),('a', '1'),('a', '1')],
     [('a', '0'), ('a', '0'), ('a', '0'),('a','0')],
     [('a', '5'), ('a', '8'), ('a', '7')]

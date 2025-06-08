@@ -122,17 +122,17 @@ def parse_nfa(file_path):
     F = set(namespace['F'])
     T = list(namespace['T'])
     q0 = namespace['q0']
-    test_case = list(namespace['test_case'])
+    test_cases = list(namespace['test_cases'])
 
-    return Q, E, F, T, q0, test_case
+    return Q, E, F, T, q0, test_cases
 
 # Path to your file
 file_path = r"C:\Users\hp\OneDrive\Desktop\Automata Tools\NFA\nfa2.txt"
 
 # Parse the file
-Q, E, F, T, q0, test_case = parse_nfa(file_path)
+Q, E, F, T, q0, test_cases = parse_nfa(file_path)
 nfa = NFA(Q, E, T, q0, F)
 result = nfa.emptiness()
 print("Emptiness =" ,result )
-for i in test_case:
+for i in test_cases:
     print(nfa.accepts(i))
