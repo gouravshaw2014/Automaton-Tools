@@ -88,9 +88,12 @@ class SAFA:
     def convert_nfa_T(self):
         NFA_T = []
         E = set()
+        # remove unused sets in H
+        H_unique = set()
         for (q, a), cond_targets in self.T.items():
             for cond, target_set in cond_targets:
                 hi, val = cond.split(',')  # e.g., 'h2', '1'
+                H_unique.add(hi)
                 for target in target_set:
                     q_next, h_next = target.split(',')
                     if h_next != '-':
@@ -101,6 +104,26 @@ class SAFA:
                     NFA_T.append((q, ext_symbol, {q_next}))
 
         H = self.H.keys()
+
+        if len(H) != len(H_unique):
+            H = H_unique
+            map = {}
+            i=1
+            for h in H_unique:
+                map[h] = f"h{i}"
+                i+=1
+            
+            T_new = []
+
+            for q, symbol, next_states in NFA_T:
+                new_symbol = symbol
+                new_next_states = next_states
+                for h in H_unique:
+                    new_symbol = new_symbol.replace(h, map[h])
+                    new_next_states = {state.replace(h, map[h]) for state in new_next_states}
+                T_new.append((q, new_symbol, new_next_states))
+
+            NFA_T = T_new
 
         for a in self.E:
             for h1 in H:
@@ -161,6 +184,8 @@ class SAFA:
         E, T1 = self.convert_nfa_T()
         # print(T1)
         nfa1 = NFA(self.Q, E, T1, self.q0, self.F)
+        if nfa1.emptiness():
+            return True
         Q2, T2, q02, F2 = self.convert_safa_T(E)
         # print(T2)
         nfa2 = NFA(Q2, E, T2, q02, F2)
@@ -228,7 +253,7 @@ def parse_safa(filepath):
     #         context['H'], context['T'], context['test_case'])
 
 # Usage
-file_path = r"C:\Users\hp\OneDrive\Desktop\Automata Tools\SAFA\safa3.txt"
+file_path = r"C:\Users\hp\OneDrive\Desktop\Automata Tools\SAFA\safa4.txt"
 Q, E, q0, F, H, T, test_case = parse_safa(file_path)
 
 # Now you can use your SAFA class as before
