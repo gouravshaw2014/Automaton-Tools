@@ -4,7 +4,7 @@ Q = {'q0','q1','q2'}
 # Alphabet
 E = {'a','b'}
 
-# Transitions: (current_state, input_symbol, next_state)
+# Transitions: ('current_state', 'input_symbol', {'next_state'})
 T = [
     ('q0','a', {'q0','q1'}),
     ('q0','b', {'q0'}),
