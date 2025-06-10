@@ -205,9 +205,9 @@ q0 = 'q0'
 
 F = {'q1', 'q3'}
 
---Set of sets: {'set number' :set()}to create sets
+--Set of sets: {'set number'}
 
-H = {'h1': set(), 'h2': set()}
+H = {'h1', 'h2'}
 
 --Transition function: ('state', 'symbol', 'set_number_to_check_its_presence,0/1', {'next_states,set_number_for_insertion'})
 

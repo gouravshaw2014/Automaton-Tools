@@ -9,7 +9,10 @@ class SAFA:
         self.E = E
         self.q0 = q0
         self.F = F
-        self.H = H
+        H_new = {}
+        for h in H:
+            H_new[h] = set()
+        self.H = H_new
         self.T = self.convert(T)  # { (state, symbol, condition) : set of "next_state,set_name" }
 
     def convert(self,T):
@@ -238,7 +241,7 @@ def parse_safa(filepath):
     Q = set(namespace['Q'])
     E = set(namespace['E'])
     q0 = namespace['q0']
-    H = dict(namespace['H'])
+    H = set(namespace['H'])
     F = set(namespace['F'])
     T = list(namespace['T'])    
     test_cases = list(namespace['test_cases'])

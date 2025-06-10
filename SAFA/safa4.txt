@@ -11,7 +11,7 @@ q0 = 'q0'
 F = {'q1'}
 
 # Set of sets
-H = {'h1': set(), 'h2': set()}
+H = {'h1', 'h2'}
 
 # Transition function: ('state', 'symbol', 'set_number_to_check_its_presence,0/1', {'next_states,set_number_for_insertion'})
 # "0" for known / "1" for new and '-' for no insertion
