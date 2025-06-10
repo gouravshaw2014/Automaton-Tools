@@ -1,0 +1,30 @@
+# States
+Q = { }
+
+# Alphabet
+E = { }
+
+# Initial register contents: {'register index' : 'data value'} for uninitialized (⊥) = None(without quotes)
+R0 = { }
+
+# Transitions: ('current_state', 'input_symbol', 'register_index', {'next_state'})
+T = [
+     
+]
+
+# Update function: ('state', 'input_symbol') : 'register_index' to update with fresh data
+U = {
+    
+}
+
+# Initial state
+q0 = ' '
+
+# Accepting state(s)
+F = { }
+
+# Test cases as sequence of (input_symbol, data_value)
+test_cases = [
+    [( , )],
+    [( , )]
+]

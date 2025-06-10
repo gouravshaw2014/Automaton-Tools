@@ -1,0 +1,21 @@
+# States
+Q = { }
+
+# Alphabet
+E = { }
+
+# Transitions: (current_state, input_symbol, next_state)
+T = [
+     
+]
+
+# Initial state
+q0 = ' '
+
+# Accepting state(s)
+F = { }
+
+# Test cases as array of strings
+test_cases = [
+    
+]

@@ -1,0 +1,26 @@
+# States
+Q = { }
+
+# Alphabet
+E = { }
+
+# Initial state
+q0 = ' '
+
+# Accepting state(s)
+F = { }
+
+# Set of sets
+H = { }
+
+# Transition function: ('state', 'symbol', 'set_number_to_check_its_presence,0/1', {'next_states,set_number_for_insertion'})
+# "0" for known / "1" for new and '-' for no insertion
+T = [
+     
+]
+
+# Array of test case with sequence ('symbol', 'data_value')
+test_cases=[
+    [( , )],
+    [( , )]
+]

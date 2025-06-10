@@ -1,0 +1,23 @@
+# States
+Q = { }
+
+# Alphabet
+E = { }
+
+# Set of Initial States
+I = { }
+
+# Set of Final States
+F = { }
+
+# Transition format: ('current_state', 'input_symbol', ('condition_op', 'value'), 'instruction', {'next_state'})
+# instruction formate => '*' : reset, '0' : no change , '+n' : add n
+T = [
+   
+]
+
+# Test cases as sequence of ('input_symbol', 'data_value')
+test_cases = [
+    [( , )], 
+    [( , )]
+]

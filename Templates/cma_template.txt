@@ -1,0 +1,25 @@
+# States
+Q = { }
+
+# Alphabet
+E = { }
+
+# Transition function : ('state', 'symbol', 'last_state', {'next_states'})
+# '-' for new
+T = [
+     
+]
+
+# Initial state
+q0 = ' '
+
+# Set of Local Final States
+Fl = { }
+
+# Set of Global Final States
+Fg = { }
+
+# Array of test case with sequence ('symbol', 'data_value')
+test_cases = [
+     
+]
