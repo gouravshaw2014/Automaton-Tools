@@ -107,26 +107,29 @@ class SAFA:
                     NFA_T.append((q, ext_symbol, {q_next}))
 
         H = self.H.keys()
+        
+        H = H_unique
+        # print(H)
+        H_new = set()
+        map = {}
+        i=1
+        for h in H_unique:
+            map[h] = f"h{i}"
+            H_new.add(map[h])
+            i+=1
+        
+        H = H_new
+        T_new = []
 
-        if len(H) != len(H_unique):
-            H = H_unique
-            map = {}
-            i=1
+        for q, symbol, next_states in NFA_T:
+            new_symbol = symbol
+            new_next_states = next_states
             for h in H_unique:
-                map[h] = f"h{i}"
-                i+=1
-            
-            T_new = []
+                new_symbol = new_symbol.replace(h, map[h])
+                new_next_states = {state.replace(h, map[h]) for state in new_next_states}
+            T_new.append((q, new_symbol, new_next_states))
 
-            for q, symbol, next_states in NFA_T:
-                new_symbol = symbol
-                new_next_states = next_states
-                for h in H_unique:
-                    new_symbol = new_symbol.replace(h, map[h])
-                    new_next_states = {state.replace(h, map[h]) for state in new_next_states}
-                T_new.append((q, new_symbol, new_next_states))
-
-            NFA_T = T_new
+        NFA_T = T_new
 
         for a in self.E:
             for h1 in H:
@@ -136,6 +139,7 @@ class SAFA:
                     for h2 in H:
                         ext_symbol = f"{a},{h1},{val},{h2}"
                         E.add(ext_symbol)
+        # print(E)
         return E, NFA_T
 
     def convert_safa_T(self, E):
