@@ -2,5 +2,5 @@ from Automata import *
 
 
 
-file_path = r"C:\Users\hp\OneDrive\Desktop\Automata Tools\NFA\nfa2.txt"
-parse_nfa(file_path)
+file_path = r"C:\Users\hp\OneDrive\Desktop\Automata Tools\SAFA\safa3.txt"
+parse_safa(file_path)

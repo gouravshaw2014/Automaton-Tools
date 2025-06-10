@@ -535,7 +535,7 @@ def parse_ra(file_path):
         result =  'Accepted' if ra.accepts(test) else 'Rejected'
         print(f"Test case {i+1} : {result}")
 
-def parse_safa(filepath):
+def parse_safa(file_path):
     with open(file_path, 'r') as f:
         content = f.read()
 
