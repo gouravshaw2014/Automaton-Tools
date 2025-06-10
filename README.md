@@ -178,9 +178,9 @@ F: A set of final or accepting states, which is a subset of Q.
 
 H: The finite set of finite sets of data values.
 
-δ/T: The transition relation is δ⊆ Q×Σ×C×OP×Q where C = {p(hi), !p(hi) | hi ∈H}, hi denotes the ith set in H, and OP = {−, ins(hi) | hi ∈ H}.
+δ/T: The transition relation is δ ⊆ Q×Σ×C×OP×Q where C = {p(hi), !p(hi) | hi ∈H}, hi denotes the ith set in H, and OP = {−, ins(hi) | hi ∈ H}.
 
-To create an RA object initialize in the order SAFA(Q, E, q0, F, H, T) or can give the text file path to parse and test it with the test cases.
+To create an SAFA object initialize in the order SAFA(Q, E, q0, F, H, T) or can give the text file path to parse and test it with the test cases.
 
 -------------------------------------------------
 
@@ -252,3 +252,147 @@ To check for emptiness of the SAFA, you can use the emptiness metthod which retu
 -------------------------------------------------
 
 ## CCA(Class Count Automata)
+An CCA, or Class Count Automata, is represented by a 5-tuple, which includes the following components:
+
+Q: A finite set of states.
+
+Σ/E: A finite set of input symbols.
+
+I: The set of initial states, which is an element of Q.
+
+F: A set of final or accepting states, which is a subset of Q.
+
+δ/T: The transition relation is given by: δ ⊆ (Q x Σ x C x I x U x Q), where C is a finite subset of C and U is a finite subset of N.
+
+To create an CCA object initialize in the order CCA(Q, E, I, F, T) or can give the text file path to parse and test it with the test cases.
+
+-------------------------------------------------
+
+### Representation of (Q, E, I, F, T, test_cases) in text file
+#### Note :
+Q, E, I, F, T and test_cases should be mentioned once in the text file and the elements must be in single quotes and maintain the Brackets associates with it.
+
+### Example 
+--States
+
+Q = {'q0', 'q1'}
+
+--Alphabet
+
+E = {'a', 'b'}
+
+--Set of Initial States
+
+I = {'q0'}
+
+--Set of Final States
+
+F = {'q1'}
+
+--Transition format: ('current_state', 'input_symbol', ('condition_op', 'value'), 'instruction', {'next_state'})
+
+--Instruction format => '*' : reset, '0' : no change , '+n' : add n
+
+T = [
+
+    ('q0', 'a', ('<', 2), '+1',{'q0'}),
+
+    ('q0', 'a', ('=', 2), '0', {'q1'}),
+
+    ('q0', 'b', ('>=', 0), '0', {'q0'}),
+
+    ('q1', 'a', ('=', 2), '0', {'q1'}),
+
+    ('q1', 'a', ('<', 2), '+1', {'q0'}),
+
+    ('q1', 'b', ('>=', 0), '0', {'q1'})
+
+]
+
+--Test cases as sequence of (input_symbol, data_value)
+
+test_cases = [
+
+    [('a', '1'), ('a', '2'), ('a', '3'), ('a', '2'), ('a', '3'), ('a', '2'), ('a', '3')],   
+
+    [('a', '1'), ('a', '2'), ('a', '1')],   
+
+    [('b', '1'), ('a', '5'), ('b', '1'), ('a', '5'), ('a', '5')],   
+
+    [('a', '7'), ('b', '9'), ('a', '7')],   
+
+]
+
+-------------------------------------------------
+
+## CMA(Class Memory Automata)
+An CCA, or Class Count Automata, is represented by a 5-tuple, which includes the following components:
+
+Q: A finite set of states.
+
+Σ/E: A finite set of input symbols.
+
+I: The set of initial states, which is an element of Q.
+
+F: A set of final or accepting states, which is a subset of Q.
+
+δ/T: The transition relation is given by: δ ⊆ (Q x Σ x C x I x U x Q), where C is a finite subset of C and U is a finite subset of N.
+
+To create an CMA object initialize in the order CMA(Q, E, T, q0, Fl, Fg) or can give the text file path to parse and test it with the test cases.
+
+-------------------------------------------------
+
+### Representation of (Q, E, T, q0, Fl, Fg, test_cases) in text file
+#### Note :
+Q, E, T, q0, Fl, Fg and test_cases should be mentioned once in the text file and the elements must be in single quotes and maintain the Brackets associates with it.
+
+### Example 
+--States
+
+Q = {'q0', 'qa', 'qb'}
+
+--Alphabet
+
+E = {'a', 'b'}
+
+--Transition format: ('current_state', 'input_symbol', 'last_state', {'next_state'})
+
+-- last_state will be '-' for no last_state i.e. new data value
+
+T = [
+
+    ('q0', 'a', '-', {'qa'}),
+    
+    ('qa', 'a', '-', {'qa'}),
+    
+    ('qb', 'a', '-', {'qa'})
+
+]
+
+--Initial state
+
+q0 = 'q0'
+
+--Set of Local Final States
+
+Fl = {'q0', 'qa', 'qb'}
+
+--Set of Global Final States
+
+Fg = {'q0', 'qa', 'qb'}
+
+--Test cases as sequence of (input_symbol, data_value)
+
+test_cases = [
+
+    [('a', '1'), ('a', '2'), ('a', '3'), ('a', '2'), ('a', '3'), ('a', '2'), ('a', '3')],   
+
+    [('a', '1'), ('a', '2'), ('a', '1')],   
+
+    [('b', '1'), ('a', '5'), ('b', '1'), ('a', '5'), ('a', '5')],   
+
+    [('a', '7'), ('b', '9'), ('a', '7')],   
+
+]
+
+-------------------------------------------------
