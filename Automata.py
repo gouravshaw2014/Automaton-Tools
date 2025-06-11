@@ -127,7 +127,6 @@ class RA:
 
                 if pos == len(string):
                     if state in self.F:
-                        current, peak = tracemalloc.get_traced_memory()
                         return True
                     continue
 
@@ -387,8 +386,9 @@ class CCA:
 
         return dict(grouped)
 
-    def evaluate_condition(self, count: int, cond: Tuple[str, int]) -> bool:
+    def evaluate_condition(self, count: int, cond: Tuple[str, str]) -> bool:
         op, val = cond
+        val = int(val)
         if op == '=':
             return count == val
         elif op == '>=':
@@ -578,7 +578,7 @@ def parse_cca(file_path):
         result =  'Accepted' if cca.accepts(test) else 'Rejected'
         print(f"Test case {i+1} : {result}")
 
-def parse_cma(filepath):
+def parse_cma(file_path):
     with open(file_path, 'r') as f:
         content = f.read()
 
