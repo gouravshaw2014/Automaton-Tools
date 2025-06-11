@@ -1,0 +1,39 @@
+# RA for all unique data values for a i.e Lfd(a)
+
+# States
+Q = {'q0', 'q1', 'q2'}
+
+# Alphabet
+E = {'a'}
+
+# Initial register contents: {'register index' : 'data value'} for uninitialized (⊥) = None(without quotes)
+R0 = {'1': None, '2': None}
+
+# Transitions: ('current_state', 'input_symbol', 'register_index', {'next_state'})
+T = [
+    ('q0', 'a', '1', {'q0', 'q1'}),
+    ('q1', 'a', '2', {'q1'}),
+    ('q1', 'a', '1', {'q2'}),
+    ('q2', 'a', '1', {'q2'}),
+    ('q2', 'a', '2', {'q2'}),
+]
+
+# Update function: ('state', 'input_symbol') : 'register_index' to update with fresh data
+U = {
+    ('q0', 'a'): '1',
+    ('q1', 'a'): '2',
+    ('q2', 'a'): '2'
+}
+
+# Initial state
+q0 = 'q0'
+
+# Accepting state(s)
+F = {'q2'}
+
+# Test cases as sequence of ('input_symbol', 'data_value')
+test_cases = [
+    [('a', '0'),('a', '0'),('a', '1'),('a', '1')],
+    [('a', '0'), ('a', '0'), ('a', '0'),('a','0')],
+    [('a', '5'), ('a', '8'), ('a', '7')]
+]
