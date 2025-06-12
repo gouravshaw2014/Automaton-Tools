@@ -509,7 +509,7 @@ def parse_nfa(file_path):
 
     for i, test in enumerate(test_cases):
         result =  'Accepted' if nfa.accepts(test) else 'Rejected'
-        print(f"Test case {i+1} : {result}")
+        print(f"Test case {i+1} : {test}\n{result}\n")
 
 def parse_ra(file_path):
     with open(file_path, 'r') as f:
@@ -533,7 +533,7 @@ def parse_ra(file_path):
 
     for i, test in enumerate(test_cases):
         result =  'Accepted' if ra.accepts(test) else 'Rejected'
-        print(f"Test case {i+1} : {result}")
+        print(f"Test case {i+1} : {test}\n{result}\n")
 
 def parse_safa(file_path):
     with open(file_path, 'r') as f:
@@ -556,7 +556,7 @@ def parse_safa(file_path):
 
     for i, test in enumerate(test_cases):
         result =  'Accepted' if safa.accepts(test) else 'Rejected'
-        print(f"Test case {i+1} : {result}")
+        print(f"Test case {i+1} : {test}\n{result}\n")
 
 def parse_cca(file_path):
     with open(file_path, 'r') as f:
@@ -576,7 +576,7 @@ def parse_cca(file_path):
 
     for i, test in enumerate(test_cases):
         result =  'Accepted' if cca.accepts(test) else 'Rejected'
-        print(f"Test case {i+1} : {result}")
+        print(f"Test case {i+1} : {test}\n{result}\n")
 
 def parse_cma(file_path):
     with open(file_path, 'r') as f:
@@ -597,4 +597,4 @@ def parse_cma(file_path):
 
     for i, test in enumerate(test_cases):
         result =  'Accepted' if cma.accepts(test) else 'Rejected'
-        print(f"Test case {i+1} : {result}")
+        print(f"Test case {i+1} : {test}\n{result}\n")

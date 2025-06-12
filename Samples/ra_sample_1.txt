@@ -1,4 +1,4 @@
-# RA for all unique data values for a i.e Lfd(a)
+# RA for any data values for a which appears twice
 
 # States
 Q = {'q0', 'q1', 'q2'}
@@ -11,18 +11,26 @@ R0 = {'1': None, '2': None}
 
 # Transitions: ('current_state', 'input_symbol', 'register_index', {'next_state'})
 T = [
-    ('q0', 'a', '1', {'q0', 'q1'}),
+    ('q0', 'a', '1', {'q0'}),
+    ('q0', 'b', '1', {'q0'}),
+    ('q0', 'a', '1', {'q1'}),
     ('q1', 'a', '2', {'q1'}),
+    ('q1', 'b', '2', {'q1'}),
     ('q1', 'a', '1', {'q2'}),
     ('q2', 'a', '1', {'q2'}),
     ('q2', 'a', '2', {'q2'}),
+    ('q2', 'b', '1', {'q2'}),
+    ('q2', 'b', '2', {'q2'})
 ]
 
 # Update function: ('state', 'input_symbol') : 'register_index' to update with fresh data
 U = {
     ('q0', 'a'): '1',
+    ('q0', 'b'): '1',
     ('q1', 'a'): '2',
-    ('q2', 'a'): '2'
+    ('q1', 'b'): '2',
+    ('q2', 'a'): '2',
+    ('q2', 'b'): '2',
 }
 
 # Initial state
