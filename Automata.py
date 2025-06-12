@@ -23,7 +23,7 @@ class NFA:
 
     def accepts(self, string):
         current_states = {(self.q0, 0)}  # (state, position in string)
-        count=0
+        
         while current_states:
             next_states = set()
             
@@ -38,7 +38,7 @@ class NFA:
                 if(state,a) in self.T:
                     for next_state in self.T[(state, a)]:
                         next_states.add((next_state, pos + 1))
-                        count+=1
+                        
                 else:
                     continue
 
