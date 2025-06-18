@@ -135,10 +135,11 @@ class RA:
 
                 # Case 1: d matches existing register value
                 for reg, val in r_cur.items():
-                    if val == d and (state, a, reg) in self.T:
+                    if val == d :
                         matched = True
-                        for next_state in self.T[(state, a, reg)]:
-                            next_states.add((next_state, pos + 1, r_frozen))  # No change to registers
+                        if (state, a, reg) in self.T:
+                            for next_state in self.T[(state, a, reg)]:
+                                next_states.add((next_state, pos + 1, r_frozen))  # No change to registers
 
                 if matched:
                     continue
