@@ -22,28 +22,25 @@ class NFA:
         return CT
 
     def accepts(self, string):
-        current_states = {(self.q0, 0)}  # (state, position in string)
+        queue = deque()
+        queue.append((self.q0, 0))
         
-        while current_states:
-            next_states = set()
-            
-            for state, pos in current_states:
-                if pos == len(string):
-                    # Accept only if we're in the final state at end
-                    if state in self.F:
-                        return True
-                    continue
+        while queue:
+            state, pos = queue.popleft()
+            if pos == len(string):
+                # Accept only if we're in the final state at end
+                if state in self.F:
+                    return True
+                continue
 
-                a = string[pos]
-                if(state,a) in self.T:
-                    for next_state in self.T[(state, a)]:
-                        next_states.add((next_state, pos + 1))
-                        
-                else:
-                    continue
+            a = string[pos]
+            if(state,a) in self.T:
+                for next_state in self.T[(state, a)]:
+                    queue.append((next_state, pos + 1))
+                    
+            else:
+                continue
 
-            current_states = next_states
-            # print(current_states)
         return False
 
     def combine(self, nfa2):
