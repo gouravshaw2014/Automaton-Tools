@@ -115,42 +115,41 @@ class RA:
         return CT
 
     def accepts(self, string: List[Tuple[str, str]]) -> bool:
-        current_states = {(self.q0, 0, frozenset((h, str(v)) for h, v in self.R.items()))}
-        
-        while current_states:
-            next_states = set()
-            for state, pos, r_frozen in current_states:
-                r_cur = dict(r_frozen)
+        # current_states = {(self.q0, 0, frozenset((h, str(v)) for h, v in self.R.items()))}
+        queue = deque()
+        queue.append((self.q0, 0, frozenset((h, str(v)) for h, v in self.R.items())))
+        while queue:
+            state, pos, r_frozen = queue.popleft()
+            r_cur = dict(r_frozen)
 
-                if pos == len(string):
-                    if state in self.F:
-                        return True
-                    continue
+            if pos == len(string):
+                if state in self.F:
+                    return True
+                continue
 
-                a, d = string[pos]
-                matched = False
+            a, d = string[pos]
+            matched = False
 
-                # Case 1: d matches existing register value
-                for reg, val in r_cur.items():
-                    if val == d :
-                        matched = True
-                        if (state, a, reg) in self.T:
-                            for next_state in self.T[(state, a, reg)]:
-                                next_states.add((next_state, pos + 1, r_frozen))  # No change to registers
+            # Case 1: d matches existing register value
+            for reg, val in r_cur.items():
+                if val == d :
+                    matched = True
+                    if (state, a, reg) in self.T:
+                        for next_state in self.T[(state, a, reg)]:
+                            queue.append((next_state, pos + 1, r_frozen))  # No change to registers
 
-                if matched:
-                    continue
+            if matched:
+                continue
 
-                # Case 2: fresh value
-                if (state, a) in self.U:
-                    j = self.U[(state, a)]
-                    r_next = dict(r_cur)
-                    r_next[j] = d
-                    if (state, a, j) in self.T:
-                        for next_state in self.T[(state, a, j)]:
-                            next_states.add((next_state, pos + 1, frozenset(r_next.items())))
+            # Case 2: fresh value
+            if (state, a) in self.U:
+                j = self.U[(state, a)]
+                r_next = dict(r_cur)
+                r_next[j] = d
+                if (state, a, j) in self.T:
+                    for next_state in self.T[(state, a, j)]:
+                        queue.append((next_state, pos + 1, frozenset(r_next.items())))
                             
-            current_states = next_states
         return False
 
 class SAFA:
