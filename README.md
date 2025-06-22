@@ -84,7 +84,7 @@ To check for emptiness of the NFA, you can use the emptiness metthod which retur
 -------------------------------------------------
 
 ## RA(Register Automata)
-An RA, or Register Automata, is represented by a 6-tuple, which includes the following components:
+An RA, or Register Automata, is represented by a 7-tuple, which includes the following components:
 
 Q: A finite set of states.
 
