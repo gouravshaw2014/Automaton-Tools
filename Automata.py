@@ -383,32 +383,70 @@ class CCA:
 
         return dict(grouped)
 
-    def evaluate_condition(self, count: int, cond: Tuple[str, str]) -> bool:
+    def evaluate_condition(self, count: str, cond: Tuple[str, str]) -> bool:
         op, val = cond
-        val = int(val)
         if op == '=':
-            return count == val
+            if len(count) == len(val):
+                return count == val
+            else:
+                return False
         elif op == '>=':
-            return count >= val
+            if len(count) > len(val):
+                return True
+            elif len(count) == len(val):
+                for i in range(len(count)):
+                    if count[i] < val[i]:
+                        return False
+                return True
+            else:
+                return False
         elif op == '>':
-            return count > val
+            if len(count) > len(val):
+                return True
+            elif len(count) == len(val):
+                for i in range(len(count)):
+                    if count[i] <= val[i]:
+                        return False
+                return True
+            else:
+                return False
         elif op == '<':
-            return count < val
+            if len(count) < len(val):
+                return True
+            elif len(count) == len(val):
+                for i in range(len(count)):
+                    if count[i] > val[i]:
+                        return False
+                return True
+            else:
+                return False
         elif op == '<=':
-            return count <= val
+            if len(count) < len(val):
+                return True
+            elif len(count) == len(val):
+                for i in range(len(count)):
+                    if count[i] >= val[i]:
+                        return False
+                return True
+            else:
+                return False
         elif op == '!=':
-            return count != val
+            if len(count) == len(val):
+                return count != val
+            else:
+                return True
         else:
             raise ValueError(f"Unknown condition: {cond}")
 
-    def apply_instruction(self, count: int, inst: str, data: str, counter: Dict[str, int]) -> None:
+    def apply_instruction(self, count: str, inst: str, data: str, counter: Dict[str, str]) -> None:
         if inst == '*':
             if data in counter:
-                counter[data] = 0  # Reset completely
+                counter[data] = '0'  # Reset completely
         elif inst == '0':
             pass  # Keep the count as is (no update needed)
         elif inst.startswith('+'):
-            counter[data] = count + int(inst[1:])
+            result = int(count) + int(inst[1:])
+            counter[data] = str(result)
         else:
             raise ValueError(f"Invalid instruction: {inst}")
 
@@ -428,7 +466,7 @@ class CCA:
                 continue
 
             sym, data = input_seq[i]
-            count = h.get(data, 0)
+            count = h.get(data, '0')
 
             key = (q, sym)
             if key in self.T:

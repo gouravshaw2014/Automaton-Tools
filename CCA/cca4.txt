@@ -13,12 +13,12 @@ F = {'q1'}
 # Transition format: ('current_state', 'input_symbol', ('condition_op', 'value'), 'instruction', {'next_state'})
 # instruction format: '*' : reset, '0' : no change , '+n' : add n
 T = [
-    ('q0', 'a', ('<', 2), '+1',{'q0'}),
-    ('q0', 'a', ('=', 2), '0', {'q1'}),
-    ('q0', 'b', ('>=', 0), '0', {'q0'}),
-    ('q1', 'a', ('=', 2), '0', {'q1'}),
-    ('q1', 'a', ('<', 2), '+1', {'q0'}),
-    ('q1', 'b', ('>=', 0), '0', {'q1'})
+    ('q0', 'a', ('<', '2'), '+1',{'q0'}),
+    ('q0', 'a', ('=', '2'), '0', {'q1'}),
+    ('q0', 'b', ('>=', '0'), '0', {'q0'}),
+    ('q1', 'a', ('=', '2'), '0', {'q1'}),
+    ('q1', 'a', ('<', '2'), '+1', {'q0'}),
+    ('q1', 'b', ('>=', '0'), '0', {'q1'})
 ]
 
 # Test cases as sequence of ('input_symbol', 'data_value')
